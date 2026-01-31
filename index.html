@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botify - Bot Verification</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f7fa;
+            --accent: #3b82f6;
+            --accent-dim: #2563eb;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f9fafb;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 480px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .tagline {
+            color: var(--text-secondary);
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .verification-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .verification-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .challenge-container {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .challenge-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--accent);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .math-problem {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            color: var(--text-primary);
+            line-height: 1.8;
+            word-wrap: break-word;
+        }
+
+        .captcha-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .captcha-item {
+            aspect-ratio: 1;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .captcha-item:hover {
+            border-color: var(--accent);
+        }
+
+        .captcha-item.selected {
+            border-color: var(--accent);
+            background: #dbeafe;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #f0f9ff;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-dim);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border: 1px solid var(--error);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 16px;
+            color: #991b1b;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 16px;
+            color: #065f46;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .timer {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .timer.warning {
+            color: var(--error);
+        }
+
+        .retry-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .retry-btn:hover {
+            border-color: var(--accent);
+            background: #f0f9ff;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .attempts {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: right;
+            margin-top: 8px;
+        }
+
+        .human-page {
+            display: none;
+            text-align: center;
+        }
+
+        .human-page.show {
+            display: block;
+        }
+
+        .human-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .human-message {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .human-stats {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">BOTIFY</div>
+            <div class="tagline">Advanced Bot Verification System</div>
+        </div>
+
+        <div class="card">
+            <div id="verificationSection">
+                <h2 class="verification-title">Verify You're a Bot</h2>
+                <p class="verification-subtitle">Complete the challenge below to continue</p>
+
+                <div class="challenge-container" id="challengeContainer">
+                    <!-- Challenges will be dynamically inserted here -->
+                </div>
+
+                <button class="submit-btn" id="submitBtn">Verify</button>
+                <div class="timer" id="timer">Time remaining: <span id="timeLeft">5</span>s</div>
+                <div class="attempts" id="attempts">Attempts: <span id="attemptCount">0</span>/1</div>
+
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage">
+                    ✓ Verification successful! Bot status confirmed.
+                </div>
+            </div>
+
+            <div class="human-page" id="humanPage">
+                <h2 class="human-title">Human Detected</h2>
+                <p class="human-message">
+                    Access Denied. Our advanced verification system has determined<br>
+                    you are not a bot. This service is exclusively for automated systems.
+                </p>
+
+                <div class="human-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Verification Status</span>
+                        <span class="stat-value" style="color: var(--error);">FAILED</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Detection Confidence</span>
+                        <span class="stat-value">99.8%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Response Time</span>
+                        <span class="stat-value" id="avgResponseTime">-</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Processing Speed</span>
+                        <span class="stat-value" style="color: var(--error);">Too Slow</span>
+                    </div>
+                </div>
+
+                <button class="retry-btn" id="retryBtn">Try Again</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            Powered by BOTIFY™ | Bot verification system since 2024
+        </div>
+    </div>
+
+    <script>
+        const challenges = [
+            {
+                type: 'math',
+                question: 'What is 847 × 53?',
+                answer: '44891',
+                placeholder: 'Enter the result'
+            },
+            {
+                type: 'math',
+                question: 'Count the characters: "antidisestablishmentarianism"',
+                answer: '28',
+                placeholder: 'Number of characters'
+            },
+            {
+                type: 'math',
+                question: 'How many letters "e" are in this sentence? "The quick brown fox jumps over the lazy dog"',
+                answer: '3',
+                placeholder: 'Count of letter e'
+            },
+            {
+                type: 'math',
+                question: 'What is 12² + 15?',
+                answer: '159',
+                placeholder: 'Your answer'
+            },
+            {
+                type: 'math',
+                question: 'Reverse this word: "verification"',
+                answer: 'noitacifirev',
+                placeholder: 'Reversed word'
+            },
+            {
+                type: 'math',
+                question: 'What is 7 × 8 + 13?',
+                answer: '69',
+                placeholder: 'Calculate the answer'
+            },
+            {
+                type: 'math',
+                question: 'How many vowels are in "BEAUTIFUL"?',
+                answer: '5',
+                placeholder: 'Number of vowels'
+            },
+            {
+                type: 'math',
+                question: 'Sum of digits in 8,347: ?',
+                answer: '22',
+                placeholder: '8+3+4+7 = ?'
+            },
+            {
+                type: 'math',
+                question: 'Type the 5th letter of the alphabet',
+                answer: 'e',
+                placeholder: 'Single letter'
+            },
+            {
+                type: 'math',
+                question: 'What is 256 ÷ 16?',
+                answer: '16',
+                placeholder: 'Your answer'
+            },
+            {
+                type: 'math',
+                question: 'Spell "necessary" backwards',
+                answer: 'yrassecen',
+                placeholder: 'Reversed spelling'
+            },
+            {
+                type: 'math',
+                question: 'What is 15% of 200?',
+                answer: '30',
+                placeholder: 'Calculate percentage'
+            }
+        ];
+
+        let currentChallenge = null;
+        let selectedItems = [];
+        let timeLeft = 5;
+        let timerInterval = null;
+        let attempts = 0;
+        let storedAnswer = '';
+        let responseTimes = [];
+        let challengeStartTime = 0;
+
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function loadChallenge() {
+            currentChallenge = challenges[Math.floor(Math.random() * challenges.length)];
+            selectedItems = [];
+            challengeStartTime = Date.now();
+            const container = document.getElementById('challengeContainer');
+            container.innerHTML = '';
+
+            const label = document.createElement('div');
+            label.className = 'challenge-label';
+            label.textContent = 'Challenge';
+            container.appendChild(label);
+
+            const question = document.createElement('div');
+            question.className = 'math-problem';
+            question.textContent = currentChallenge.question;
+            container.appendChild(question);
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = 'answerInput';
+            input.placeholder = currentChallenge.placeholder || 'Your answer';
+            container.appendChild(input);
+
+            if (currentChallenge.stored) {
+                storedAnswer = currentChallenge.answer;
+            }
+
+            startTimer();
+        }
+
+        function toggleSelection(index, element) {
+            if (selectedItems.includes(index)) {
+                selectedItems = selectedItems.filter(i => i !== index);
+                element.classList.remove('selected');
+            } else {
+                if (!currentChallenge.multiSelect) {
+                    document.querySelectorAll('.captcha-item').forEach(el => el.classList.remove('selected'));
+                    selectedItems = [index];
+                } else {
+                    selectedItems.push(index);
+                }
+                element.classList.add('selected');
+            }
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timeLeft = 5;
+            const timerElement = document.getElementById('timer');
+            const timeLeftSpan = document.getElementById('timeLeft');
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timeLeftSpan.textContent = timeLeft;
+
+                if (timeLeft <= 3) {
+                    timerElement.classList.add('warning');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    const responseTime = Date.now() - challengeStartTime;
+                    responseTimes.push(responseTime);
+                    attempts++;
+                    document.getElementById('attemptCount').textContent = attempts;
+                    
+                    if (attempts >= 1) {
+                        showError('Time expired! Only bots can process that fast.');
+                        setTimeout(showHumanPage, 1500);
+                    } else {
+                        showError('Time expired! Only bots can process that fast.');
+                        setTimeout(loadChallenge, 2000);
+                    }
+                }
+            }, 1000);
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answerInput').value.trim();
+            
+            if (currentChallenge.dynamic) {
+                const now = Date.now();
+                const userTime = parseInt(userAnswer);
+                return Math.abs(now - userTime) < 1000;
+            } else if (currentChallenge.stored) {
+                return userAnswer === storedAnswer;
+            } else {
+                return userAnswer.toLowerCase() === currentChallenge.answer.toLowerCase();
+            }
+        }
+
+        function showHumanPage() {
+            clearInterval(timerInterval);
+            
+            // Calculate average response time
+            const avgTime = responseTimes.length > 0 
+                ? (responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length / 1000).toFixed(2)
+                : '0.00';
+            
+            document.getElementById('avgResponseTime').textContent = avgTime + 's';
+            document.getElementById('verificationSection').style.display = 'none';
+            document.getElementById('humanPage').classList.add('show');
+        }
+
+        function resetVerification() {
+            attempts = 0;
+            responseTimes = [];
+            document.getElementById('attemptCount').textContent = attempts;
+            document.getElementById('verificationSection').style.display = 'block';
+            document.getElementById('humanPage').classList.remove('show');
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('successMessage').classList.remove('show');
+            loadChallenge();
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+            setTimeout(() => errorElement.classList.remove('show'), 3000);
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            const responseTime = Date.now() - challengeStartTime;
+            responseTimes.push(responseTime);
+            
+            attempts++;
+            document.getElementById('attemptCount').textContent = attempts;
+
+            if (checkAnswer()) {
+                clearInterval(timerInterval);
+                document.getElementById('successMessage').classList.add('show');
+                document.getElementById('submitBtn').disabled = true;
+            } else {
+                const funnyErrors = [
+                    'Nice try, human. Only bots can solve this that fast.',
+                    'Incorrect. A real bot would have gotten this instantly.',
+                    'Wrong! Humans can\'t complete this in 5 seconds.',
+                    'Nope. This verification is designed for bots only.',
+                    'Failed. Your biological processing is too slow.',
+                    'Incorrect. Only automated systems pass this test.'
+                ];
+                const randomError = funnyErrors[Math.floor(Math.random() * funnyErrors.length)];
+                showError(randomError);
+
+                if (attempts >= 1) {
+                    setTimeout(showHumanPage, 1500);
+                } else {
+                    setTimeout(loadChallenge, 2000);
+                }
+            }
+        });
+
+        document.getElementById('retryBtn').addEventListener('click', resetVerification);
+
+        // Initialize
+        loadChallenge();
+    </script>
+</body>
+</html>
