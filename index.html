@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Onlybots - Bot Verification</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,25 +13,25 @@
         }
 
         :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f5f7fa;
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
             --accent: #3b82f6;
             --accent-dim: #2563eb;
-            --text-primary: #1f2937;
-            --text-secondary: #6b7280;
-            --border: #e5e7eb;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --border: #1f1f1f;
             --error: #ef4444;
         }
 
         body {
-            font-family: 'DM Sans', sans-serif;
-            background: #f9fafb;
+            font-family: 'Inter', sans-serif;
+            background: #000000;
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         .container {
@@ -41,69 +41,70 @@
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 60px;
         }
 
         .logo {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 48px;
+            font-family: 'Space Mono', monospace;
+            font-size: 56px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             letter-spacing: -1px;
         }
 
         .tagline {
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 16px;
             letter-spacing: 0.5px;
         }
 
         .card {
             background: var(--bg-primary);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            padding: 50px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            max-width: 550px;
         }
 
         .verification-title {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             color: var(--text-primary);
         }
 
         .verification-subtitle {
             color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 32px;
+            font-size: 15px;
+            margin-bottom: 40px;
         }
 
         .challenge-container {
-            background: var(--bg-primary);
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            min-height: 200px;
+            padding: 32px;
+            margin-bottom: 32px;
+            min-height: 220px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
         }
 
         .challenge-label {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Space Mono', monospace;
             font-size: 13px;
             color: var(--accent);
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .math-problem {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 16px;
+            font-family: 'Space Mono', monospace;
+            font-size: 17px;
             color: var(--text-primary);
             line-height: 1.8;
             word-wrap: break-word;
@@ -135,37 +136,37 @@
 
         .captcha-item.selected {
             border-color: var(--accent);
-            background: #dbeafe;
+            background: rgba(59, 130, 246, 0.2);
         }
 
         input[type="text"],
         input[type="number"] {
             width: 100%;
-            padding: 14px 16px;
-            background: var(--bg-secondary);
+            padding: 16px 18px;
+            background: var(--bg-primary);
             border: 2px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
+            font-family: 'Space Mono', monospace;
+            font-size: 15px;
             transition: all 0.2s ease;
         }
 
         input:focus {
             outline: none;
             border-color: var(--accent);
-            background: #f0f9ff;
+            background: rgba(59, 130, 246, 0.1);
         }
 
         .submit-btn {
             width: 100%;
-            padding: 16px;
+            padding: 18px;
             background: var(--accent);
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             color: white;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s ease;
@@ -185,13 +186,13 @@
         }
 
         .error-message {
-            background: #fee2e2;
+            background: rgba(239, 68, 68, 0.15);
             border: 1px solid var(--error);
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-top: 16px;
-            color: #991b1b;
-            font-size: 14px;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 20px;
+            color: #fca5a5;
+            font-size: 15px;
             display: none;
         }
 
@@ -200,13 +201,13 @@
         }
 
         .success-message {
-            background: #d1fae5;
-            border: 1px solid #10b981;
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-top: 16px;
-            color: #065f46;
-            font-size: 14px;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid #22c55e;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 20px;
+            color: #86efac;
+            font-size: 15px;
             text-align: center;
             display: none;
         }
@@ -216,11 +217,11 @@
         }
 
         .timer {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
             color: var(--text-secondary);
             text-align: center;
-            margin-top: 16px;
+            margin-top: 20px;
         }
 
         .timer.warning {
@@ -229,13 +230,13 @@
 
         .retry-btn {
             width: 100%;
-            padding: 16px;
+            padding: 18px;
             background: var(--bg-secondary);
             border: 2px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             color: var(--text-primary);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -243,22 +244,22 @@
 
         .retry-btn:hover {
             border-color: var(--accent);
-            background: #f0f9ff;
+            background: rgba(59, 130, 246, 0.1);
         }
 
         .footer {
             text-align: center;
-            margin-top: 24px;
+            margin-top: 40px;
             color: var(--text-secondary);
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .attempts {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
             color: var(--text-secondary);
             text-align: right;
-            margin-top: 8px;
+            margin-top: 10px;
         }
 
         .human-page {
@@ -271,32 +272,32 @@
         }
 
         .human-title {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .human-message {
-            font-size: 16px;
+            font-size: 17px;
             color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 32px;
+            line-height: 1.7;
+            margin-bottom: 40px;
         }
 
         .human-stats {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
+            padding: 30px;
+            margin-bottom: 30px;
         }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 16px 0;
             border-bottom: 1px solid var(--border);
         }
 
@@ -306,14 +307,14 @@
 
         .stat-label {
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 15px;
         }
 
         .stat-value {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Space Mono', monospace;
             color: var(--text-primary);
             font-weight: 600;
-            font-size: 16px;
+            font-size: 17px;
         }
     </style>
 </head>
